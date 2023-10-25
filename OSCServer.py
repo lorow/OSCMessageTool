@@ -32,5 +32,5 @@ class OSCServer:
         try:
             self.server.server_close()
         # we're safe to ignore any exceptions coming from server shutdown
-        except:
+        except Exception:  # noqa
             pass

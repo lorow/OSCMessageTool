@@ -1,27 +1,18 @@
 from queue import Queue
 from time import sleep
 
-from rich import box
 from rich.layout import Layout
 
-from rich.console import Console, Group
+from rich.console import Console
 from rich.live import Live
 from rich.table import Table
 
+from Widgets.SentReceivedWIdget import SentReceivedWidget
 from Widgets.StatusHeaderWidget import StatusHeaderWidget, StatusModel
 
 
 class DisplayServer:
     def __init__(self, sent_messages_queue: Queue, received_messages_queue: Queue) -> None:
-        self.sent_messages_queue = sent_messages_queue
-        self.received_messages_queue = received_messages_queue
-        self.received_messages_buffer = []
-        self.sent_messages_buffer = []
-
-        self.poll_tick_rate = 100  # 100ms
-        self.message_cap = 100
-        self.i = 0
-
         self.header_widget = StatusHeaderWidget(StatusModel(
             messages_to_send=200,
             is_sending=True,
@@ -30,30 +21,34 @@ class DisplayServer:
             sending_port=2336,
             receiving_port=None,
         ))
+        self.sent_received_widget = SentReceivedWidget(sent_messages_queue, received_messages_queue)
 
         self.main_bar = Table()
-        self.header_layout = Layout()
-        self.body_layout = Layout()
         self.console = Console()
         self.layout = Layout()
 
     def start(self):
-        self.body_layout.split_row(
-            Layout("OSC Messages Sent"),
-            Layout("OSC Messages Received"),
+        header = Layout(name="header")
+        body = Layout(name="body")
+        self.layout = Layout(
+            name="main",
         )
+        self.layout.split_column(
+            header,
+            body
+        )
+
+        self.header_widget.setup(self.layout["main"]["header"])
+        self.sent_received_widget.setup(self.layout["main"]["body"])
 
     def run(self):
         with Live(console=self.console, screen=False, refresh_per_second=10) as live:
             while True:
-                self.i += 1
-                live.update(
-                    Group(
-                        self.header_widget.render(
-                            messages_received=self.i,
-                            messages_sent=self.i
-                        ),
-                        self.body_layout
-                    )
+                messages_sent, messages_received = self.sent_received_widget.get_messages_stats()
+                self.header_widget.render(
+                    messages_received=messages_received,
+                    messages_sent=messages_sent
                 )
+
+                live.update(self.layout)
                 sleep(.1)

@@ -20,8 +20,12 @@ class StatusHeaderWidget:
 
     def __init__(self, config: StatusModel):
         self.config = config
+        self.layout: Optional[Layout] = None
 
-    def render(self, layout: Optional[Layout] = None, **kwargs):
+    def setup(self, layout: Optional[Layout] = None):
+        self.layout = layout
+
+    def render(self, **kwargs):
         messages_received = kwargs.get("messages_received", 0)
         messages_sent = kwargs.get("messages_sent", 0)
 
@@ -45,6 +49,5 @@ class StatusHeaderWidget:
             f"Messages Received: {messages_received}",
             f"Messages Sent: {messages_sent}"
         )
-        if layout:
-            layout.update(main_bar)
-        return main_bar
+
+        self.layout.update(main_bar)
