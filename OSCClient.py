@@ -6,8 +6,13 @@ from Models import SendingConfiguration
 
 
 class OSCClient:
-
-    def __init__(self, ip: str, port: int, output_queue, sending_configuration: SendingConfiguration):
+    def __init__(
+        self,
+        ip: str,
+        port: int,
+        output_queue,
+        sending_configuration: SendingConfiguration,
+    ):
         self.output_queue = output_queue
         self.client = udp_client.SimpleUDPClient(ip, port)
         self.sending_configuration = sending_configuration

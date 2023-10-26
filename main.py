@@ -11,9 +11,20 @@ from DisplayServer import DisplayServer
 @click.option("--receive_port", help="Port on which to listen", default=8889)
 @click.option("--command", help="OSC command to send")
 @click.option("--value", help="Value to send along the command")
-@click.option("--repeat", help="amount of times to repeat the command 0-N or INF, can be left empty", default="1")
+@click.option(
+    "--repeat",
+    help="amount of times to repeat the command 0-N or INF, can be left empty",
+    default="1",
+)
 @click.option("--listen", is_flag=True, help="Should the app listen for incoming messages")
-def main(command: str, value: str, repeat: int | str, send_port: int, receive_port: int, listen: bool):
+def main(
+    command: str,
+    value: str,
+    repeat: int | str,
+    send_port: int,
+    receive_port: int,
+    listen: bool,
+):
     event = threading.Event()
     sent_messages_queue = Queue()
     received_messages_queue = Queue()
@@ -26,9 +37,7 @@ def main(command: str, value: str, repeat: int | str, send_port: int, receive_po
         display_thread = threading.Thread(target=display.run())
         display_thread.run()
 
-        threads_to_close = [
-            display_thread
-        ]
+        threads_to_close = [display_thread]
     except KeyboardInterrupt:
         event.set()
         for thread in threads_to_close:
@@ -38,4 +47,3 @@ def main(command: str, value: str, repeat: int | str, send_port: int, receive_po
 
 if __name__ == "__main__":
     main()
-

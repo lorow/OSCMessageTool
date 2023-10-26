@@ -61,12 +61,7 @@ class SentReceivedWidget:
         return self.messages_sent, self.messages_received
 
     def render_table(self, title: str, action: str, buffer: List[(str, str)], layout: Layout):
-        table = Table(
-            title=title,
-            show_header=False,
-            box=box.SIMPLE,
-            padding=(0, 1)
-        )
+        table = Table(title=title, show_header=False, box=box.SIMPLE, padding=(0, 1))
         table.add_column("")
 
         for entry in buffer:
@@ -75,10 +70,20 @@ class SentReceivedWidget:
         layout.update(table)
 
     def render_sent_messages_table(self):
-        self.render_table("Sent Messages", "SENT", self.sent_messages_buffer, self.layout["messages_sent"])
+        self.render_table(
+            "Sent Messages",
+            "SENT",
+            self.sent_messages_buffer,
+            self.layout["messages_sent"],
+        )
 
     def render_received_message_table(self):
-        self.render_table("Received Messages", "RECEIVED", self.received_messages_buffer, self.layout["messages_received"])
+        self.render_table(
+            "Received Messages",
+            "RECEIVED",
+            self.received_messages_buffer,
+            self.layout["messages_received"],
+        )
 
     def render(self):
         self.get_messages()

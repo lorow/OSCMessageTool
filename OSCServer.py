@@ -10,17 +10,12 @@ class OSCServer:
         self.output_queue = output_queue
         self.dispatcher = dispatcher.Dispatcher()
         try:
-            self.server = ThreadingOSCUDPServer(
-                (ip, port),
-                self.dispatcher
-            )
+            self.server = ThreadingOSCUDPServer((ip, port), self.dispatcher)
         except Exception as e:
             click.echo(e)
 
         for address in addresses:
-            self.dispatcher.map(
-                address, self.handle_osc_message
-            )
+            self.dispatcher.map(address, self.handle_osc_message)
 
     def run(self):
         self.server.serve_forever()

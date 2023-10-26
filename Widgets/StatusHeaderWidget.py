@@ -17,7 +17,6 @@ class StatusModel:
 
 
 class StatusHeaderWidget:
-
     def __init__(self, config: StatusModel):
         self.config = config
         self.layout: Optional[Layout] = None
@@ -36,18 +35,18 @@ class StatusHeaderWidget:
         )
         main_bar.add_column("", justify="left")
         main_bar.add_column("", justify="left")
-        main_bar.add_row("Messages to send: ", f"{self.config.messages_to_send}", )
+        main_bar.add_row(
+            "Messages to send: ",
+            f"{self.config.messages_to_send}",
+        )
         main_bar.add_row(
             f"Sending: {':white_check_mark:' if self.config.is_sending else ':red_square: ' }",
-            f"On: {self.config.sending_address}:{self.config.sending_port}"
+            f"On: {self.config.sending_address}:{self.config.sending_port}",
         )
         main_bar.add_row(
             f"Receiving: {':white_check_mark:' if self.config.is_receiving else ':red_square: ' }",
-            f"On: {self.config.receiving_port if self.config.receiving_port else 'N/A'}"
+            f"On: {self.config.receiving_port if self.config.receiving_port else 'N/A'}",
         )
-        main_bar.add_row(
-            f"Messages Received: {messages_received}",
-            f"Messages Sent: {messages_sent}"
-        )
+        main_bar.add_row(f"Messages Received: {messages_received}", f"Messages Sent: {messages_sent}")
 
         self.layout.update(main_bar)
