@@ -29,6 +29,8 @@ class DisplayServer:
 
     def start(self):
         header = Layout(name="header")
+        header.size = 6
+
         body = Layout(name="body")
         self.layout = Layout(
             name="main",
@@ -49,6 +51,7 @@ class DisplayServer:
                     messages_received=messages_received,
                     messages_sent=messages_sent
                 )
+                self.sent_received_widget.render()
 
                 live.update(self.layout)
                 sleep(.1)

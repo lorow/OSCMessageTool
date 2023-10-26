@@ -1,7 +1,9 @@
 from queue import Queue, Empty
-from typing import Optional
+from typing import Optional, List
 
+from rich import box
 from rich.layout import Layout
+from rich.table import Table
 
 
 class SentReceivedWidget:
@@ -14,14 +16,20 @@ class SentReceivedWidget:
         self.messages_sent = 0
         self.messages_received = 0
 
-        self.received_messages_buffer = []
-        self.sent_messages_buffer = []
+        self.received_messages_buffer = [
+            ("/avatars/eyesX", 0.8),
+            ("/avatars/eyesX", 0.8),
+            ("/avatars/eyesX", 0.8),
+        ]
+        self.sent_messages_buffer = [
+            ("/avatars/eyesX", 0.8),
+        ]
 
     def setup(self, layout: Layout):
         self.layout = layout
         self.layout.split_row(
-            Layout("messages_sent", size=50),
-            Layout("messages_received", size=50),
+            Layout(name="messages_received", size=50),
+            Layout(name="messages_sent", size=50),
         )
 
     def get_messages(self):
@@ -52,5 +60,27 @@ class SentReceivedWidget:
     def get_messages_stats(self) -> (int, int):
         return self.messages_sent, self.messages_received
 
+    def render_table(self, title: str, action: str, buffer: List[(str, str)], layout: Layout):
+        table = Table(
+            title=title,
+            show_header=False,
+            box=box.SIMPLE,
+            padding=(0, 1)
+        )
+        table.add_column("")
+
+        for entry in buffer:
+            table.add_row(f"{action} {entry[0]} {entry[1]}")
+
+        layout.update(table)
+
+    def render_sent_messages_table(self):
+        self.render_table("Sent Messages", "SENT", self.sent_messages_buffer, self.layout["messages_sent"])
+
+    def render_received_message_table(self):
+        self.render_table("Received Messages", "RECEIVED", self.received_messages_buffer, self.layout["messages_received"])
+
     def render(self):
-        pass
+        self.get_messages()
+        self.render_received_message_table()
+        self.render_sent_messages_table()

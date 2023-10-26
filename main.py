@@ -1,4 +1,5 @@
 import threading
+from queue import Queue
 
 import rich_click as click
 
@@ -14,13 +15,24 @@ from DisplayServer import DisplayServer
 @click.option("--listen", is_flag=True, help="Should the app listen for incoming messages")
 def main(command: str, value: str, repeat: int | str, send_port: int, receive_port: int, listen: bool):
     event = threading.Event()
+    sent_messages_queue = Queue()
+    received_messages_queue = Queue()
+
+    threads_to_close = []
+
     try:
-        display = DisplayServer(None, None)
+        display = DisplayServer(sent_messages_queue, received_messages_queue)
         display.start()
         display_thread = threading.Thread(target=display.run())
         display_thread.run()
+
+        threads_to_close = [
+            display_thread
+        ]
     except KeyboardInterrupt:
         event.set()
+        for thread in threads_to_close:
+            thread.join()
         exit(0)
 
 
