@@ -1,8 +1,10 @@
+import asyncio
+
 import rich_click as click
 from queue import Queue
 
 from pythonosc import dispatcher
-from pythonosc.osc_server import ThreadingOSCUDPServer
+from pythonosc.osc_server import AsyncIOOSCUDPServer
 
 
 class OSCServer:
@@ -10,7 +12,9 @@ class OSCServer:
         self.output_queue = output_queue
         self.dispatcher = dispatcher.Dispatcher()
         try:
-            self.server = ThreadingOSCUDPServer((ip, port), self.dispatcher)
+            self.server = AsyncIOOSCUDPServer(
+                (ip, port), self.dispatcher, asyncio.get_event_loop()
+            )
         except Exception as e:
             click.echo(e)
 
@@ -18,7 +22,7 @@ class OSCServer:
             self.dispatcher.map(address, self.handle_osc_message)
 
     def run(self):
-        self.server.serve_forever()
+        self.server.serve()
 
     def handle_osc_message(self, osc_address, value):
         self.output_queue.put((osc_address, value))

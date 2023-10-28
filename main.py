@@ -165,7 +165,7 @@ def setup_display_server(
     )
     display.start()
     display_thread = threading.Thread(target=display.run)
-    display_thread.start()
+    display_thread.run()
 
     threads_to_close.append(display_thread)
 
