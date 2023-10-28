@@ -54,9 +54,7 @@ class SentReceivedWidget:
     def get_messages_stats(self) -> (int, int):
         return self.messages_sent, self.messages_received
 
-    def render_table(
-        self, title: str, action: str, buffer: List[set[str, str]], layout: Layout
-    ):
+    def render_table(self, title: str, action: str, buffer: List[set[str, str]], layout: Layout):
         table = Table(
             title=title,
             show_header=False,

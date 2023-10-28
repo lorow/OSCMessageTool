@@ -47,8 +47,6 @@ class StatusHeaderWidget:
             f"Receiving: {':white_check_mark:' if self.config.is_receiving else ':red_square: ' }",
             f"On: {self.config.receiving_port if self.config.receiving_port else 'N/A'}",
         )
-        main_bar.add_row(
-            f"Messages Received: {messages_received}", f"Messages Sent: {messages_sent}"
-        )
+        main_bar.add_row(f"Messages Received: {messages_received}", f"Messages Sent: {messages_sent}")
 
         self.layout.update(main_bar)

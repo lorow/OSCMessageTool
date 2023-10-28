@@ -13,9 +13,7 @@ from Widgets.StatusHeaderWidget import StatusModel
 
 @click.command()
 @click.option("--send_port", help="Port to which send the messages", default=8888)
-@click.option(
-    "--send_ip", help="IP address to send the messages to", default="127.0.0.1"
-)
+@click.option("--send_ip", help="IP address to send the messages to", default="127.0.0.1")
 @click.option("--receive_port", help="Port on which to listen", default=8889)
 @click.option("--command", help="OSC command to send")
 @click.option("--value", help="Value to send along the command")
@@ -25,9 +23,7 @@ from Widgets.StatusHeaderWidget import StatusModel
     default="1",
 )
 @click.option("--timeout", help="Timeout between each message sent", default=2)
-@click.option(
-    "--listen", is_flag=True, help="Should the app listen for incoming messages"
-)
+@click.option("--listen", is_flag=True, help="Should the app listen for incoming messages")
 def main(
     command: str | List[str],
     value: str,
@@ -160,9 +156,7 @@ def setup_display_server(
     display_server_status: StatusModel,
     threads_to_close: List[threading.Thread],
 ):
-    display = DisplayServer(
-        sent_messages_queue, received_messages_queue, display_server_status
-    )
+    display = DisplayServer(sent_messages_queue, received_messages_queue, display_server_status)
     display.start()
     display_thread = threading.Thread(target=display.run)
     display_thread.run()

@@ -12,9 +12,7 @@ class OSCServer:
         self.output_queue = output_queue
         self.dispatcher = dispatcher.Dispatcher()
         try:
-            self.server = AsyncIOOSCUDPServer(
-                (ip, port), self.dispatcher, asyncio.get_event_loop()
-            )
+            self.server = AsyncIOOSCUDPServer((ip, port), self.dispatcher, asyncio.get_event_loop())
         except Exception as e:
             click.echo(e)
 

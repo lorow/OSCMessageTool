@@ -20,7 +20,8 @@ class DisplayServer:
     ) -> None:
         self.header_widget = StatusHeaderWidget(display_server_status)
         self.sent_received_widget = SentReceivedWidget(
-            sent_messages_queue, received_messages_queue
+            sent_messages_queue,
+            received_messages_queue,
         )
 
         self.main_bar = Table()
@@ -48,7 +49,8 @@ class DisplayServer:
                     messages_received,
                 ) = self.sent_received_widget.get_messages_stats()
                 self.header_widget.render(
-                    messages_received=messages_received, messages_sent=messages_sent
+                    messages_received=messages_received,
+                    messages_sent=messages_sent,
                 )
                 self.sent_received_widget.render()
 
