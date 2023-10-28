@@ -12,18 +12,16 @@ from Widgets.StatusHeaderWidget import StatusHeaderWidget, StatusModel
 
 
 class DisplayServer:
-    def __init__(self, sent_messages_queue: Queue, received_messages_queue: Queue) -> None:
-        self.header_widget = StatusHeaderWidget(
-            StatusModel(
-                messages_to_send=200,
-                is_sending=True,
-                is_receiving=False,
-                sending_address="127.0.0.1",
-                sending_port=2336,
-                receiving_port=None,
-            )
+    def __init__(
+        self,
+        sent_messages_queue: Queue,
+        received_messages_queue: Queue,
+        display_server_status: StatusModel,
+    ) -> None:
+        self.header_widget = StatusHeaderWidget(display_server_status)
+        self.sent_received_widget = SentReceivedWidget(
+            sent_messages_queue, received_messages_queue
         )
-        self.sent_received_widget = SentReceivedWidget(sent_messages_queue, received_messages_queue)
 
         self.main_bar = Table()
         self.console = Console()
@@ -49,7 +47,9 @@ class DisplayServer:
                     messages_sent,
                     messages_received,
                 ) = self.sent_received_widget.get_messages_stats()
-                self.header_widget.render(messages_received=messages_received, messages_sent=messages_sent)
+                self.header_widget.render(
+                    messages_received=messages_received, messages_sent=messages_sent
+                )
                 self.sent_received_widget.render()
 
                 live.update(self.layout)

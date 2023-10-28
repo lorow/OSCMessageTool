@@ -22,10 +22,3 @@ class OSCServer:
 
     def handle_osc_message(self, osc_address, value):
         self.output_queue.put((osc_address, value))
-
-    def stop(self):
-        try:
-            self.server.server_close()
-        # we're safe to ignore any exceptions coming from server shutdown
-        except Exception:  # noqa
-            pass

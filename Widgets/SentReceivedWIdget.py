@@ -16,20 +16,14 @@ class SentReceivedWidget:
         self.messages_sent = 0
         self.messages_received = 0
 
-        self.received_messages_buffer = [
-            ("/avatars/eyesX", 0.8),
-            ("/avatars/eyesX", 0.8),
-            ("/avatars/eyesX", 0.8),
-        ]
-        self.sent_messages_buffer = [
-            ("/avatars/eyesX", 0.8),
-        ]
+        self.received_messages_buffer = []
+        self.sent_messages_buffer = []
 
     def setup(self, layout: Layout):
         self.layout = layout
         self.layout.split_row(
-            Layout(name="messages_received", size=50),
             Layout(name="messages_sent", size=50),
+            Layout(name="messages_received", size=50),
         )
 
     def get_messages(self):
@@ -60,12 +54,24 @@ class SentReceivedWidget:
     def get_messages_stats(self) -> (int, int):
         return self.messages_sent, self.messages_received
 
-    def render_table(self, title: str, action: str, buffer: List[(str, str)], layout: Layout):
-        table = Table(title=title, show_header=False, box=box.SIMPLE, padding=(0, 1))
+    def render_table(
+        self, title: str, action: str, buffer: List[set[str, str]], layout: Layout
+    ):
+        table = Table(
+            title=title,
+            show_header=False,
+            box=box.SIMPLE,
+            padding=(0, 1),
+            title_justify="left",
+        )
         table.add_column("")
 
+        action_styled = f"[white on green]{action}[/white on green]"
+        if action == "SENT":
+            action_styled = f"[white on blue]{action}[/white on blue]"
+
         for entry in buffer:
-            table.add_row(f"{action} {entry[0]} {entry[1]}")
+            table.add_row(f"{action_styled} {entry[0]} {entry[1]}")
 
         layout.update(table)
 

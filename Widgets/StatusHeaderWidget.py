@@ -8,12 +8,12 @@ from rich.table import Table
 
 @dataclasses.dataclass
 class StatusModel:
-    messages_to_send: int
-    is_sending: bool
-    is_receiving: bool
-    sending_address: str
-    sending_port: int
-    receiving_port: Optional[int]
+    messages_to_send: int = 0
+    is_sending: bool = False
+    is_receiving: bool = False
+    sending_address: str = "127.0.0.1"
+    sending_port: int = 8888
+    receiving_port: Optional[int] = 8889
 
 
 class StatusHeaderWidget:
@@ -47,6 +47,8 @@ class StatusHeaderWidget:
             f"Receiving: {':white_check_mark:' if self.config.is_receiving else ':red_square: ' }",
             f"On: {self.config.receiving_port if self.config.receiving_port else 'N/A'}",
         )
-        main_bar.add_row(f"Messages Received: {messages_received}", f"Messages Sent: {messages_sent}")
+        main_bar.add_row(
+            f"Messages Received: {messages_received}", f"Messages Sent: {messages_sent}"
+        )
 
         self.layout.update(main_bar)
