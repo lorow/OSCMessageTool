@@ -1,3 +1,4 @@
+import threading
 from queue import Queue
 from time import sleep
 
@@ -14,10 +15,12 @@ from Widgets.StatusHeaderWidget import StatusHeaderWidget, StatusModel
 class DisplayServer:
     def __init__(
         self,
+        event: threading.Event,
         sent_messages_queue: Queue,
         received_messages_queue: Queue,
         display_server_status: StatusModel,
     ) -> None:
+        self.event = event
         self.header_widget = StatusHeaderWidget(display_server_status)
         self.sent_received_widget = SentReceivedWidget(
             sent_messages_queue,
@@ -43,7 +46,7 @@ class DisplayServer:
 
     def run(self):
         with Live(console=self.console, screen=False, refresh_per_second=10) as live:
-            while True:
+            while not self.event.is_set():
                 (
                     messages_sent,
                     messages_received,

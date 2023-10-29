@@ -9,6 +9,7 @@ from rich.table import Table
 @dataclasses.dataclass
 class StatusModel:
     messages_to_send: int = 0
+    repeat: int | str = 1
     is_sending: bool = False
     is_receiving: bool = False
     sending_address: str = "127.0.0.1"
@@ -37,7 +38,7 @@ class StatusHeaderWidget:
         main_bar.add_column("", justify="left")
         main_bar.add_row(
             "Messages to send: ",
-            f"{self.config.messages_to_send}",
+            f"{self.config.messages_to_send}, {self.config.repeat} times",
         )
         main_bar.add_row(
             f"Sending: {':white_check_mark:' if self.config.is_sending else ':red_square: ' }",
