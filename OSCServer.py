@@ -11,16 +11,19 @@ class OSCServer:
         self.dispatcher = dispatcher.Dispatcher()
         self.dispatcher.set_default_handler(self.handle_osc_message)
 
+        self.server = None
         try:
             self.server = ThreadingOSCUDPServer((ip, port), self.dispatcher)
         except Exception as e:
             click.echo(e)
 
     def run(self):
-        self.server.serve_forever()
+        if self.server:
+            self.server.serve_forever()
 
     def stop(self):
-        self.server.shutdown()
+        if self.server:
+            self.server.shutdown()
 
     def handle_osc_message(self, osc_address, value):
         self.output_queue.put((osc_address, value))
