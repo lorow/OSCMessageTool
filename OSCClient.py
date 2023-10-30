@@ -32,7 +32,8 @@ class OSCClient:
 
     def handle_messages(self):
         for address, message in self.sending_configuration.address_value_map.items():
-            self.client.send_message(address, message)
+            # TODO this is awful, fix this, maybe --type?
+            self.client.send_message(address, float(message))
             self.output_queue.put((address, message))
             # we send each message once every 2 seconds
             sleep(self.sending_configuration.message_timeout or 2)
