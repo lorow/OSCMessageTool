@@ -15,8 +15,11 @@ from Widgets.StatusHeaderWidget import StatusModel
 @click.option("--send_port", help="Port to which send the messages", default=8888)
 @click.option("--send_ip", help="IP address to send the messages to", default="127.0.0.1")
 @click.option("--receive_port", help="Port on which to listen", default=8889)
-@click.option("--command", help="OSC command to send", multiple=True)
-@click.option("--value", help="Value to send along the command", multiple=True)
+@click.option(
+    "--command",
+    help="OSC command to send with value attached to it. --command /test/x 0.9 for example",
+    multiple=True,
+)
 @click.option(
     "--repeat",
     help="amount of times to repeat the command 0-N or INF, can be left empty",
@@ -26,7 +29,6 @@ from Widgets.StatusHeaderWidget import StatusModel
 @click.option("--listen", is_flag=True, help="Should the app listen for incoming messages")
 def main(
     command: str | List[str],
-    value: str,
     repeat: int | str,
     send_port: int,
     send_ip: str,
@@ -57,7 +59,6 @@ def main(
             event,
             send_port,
             command,
-            value,
             repeat,
             timeout,
             send_ip,
@@ -95,7 +96,6 @@ def setup_sender_server(
     event: threading.Event,
     send_port: int,
     command: List[str],
-    value: str,
     repeat: int | str,
     timeout: int,
     send_ip: str,
@@ -106,11 +106,10 @@ def setup_sender_server(
     if not send_port:
         return
 
-    if len(command) - len(value):
-        click.echo("There's a missmatch in commands and their values, exiting.")
-        exit(0)
+    address_value_map = []
+    for comm in command:
+        address_value_map.append(comm.split(" "))
 
-    address_value_map = dict(zip(command, value))
     message_config = SendingConfiguration(
         repeat=repeat,
         message_timeout=timeout,
